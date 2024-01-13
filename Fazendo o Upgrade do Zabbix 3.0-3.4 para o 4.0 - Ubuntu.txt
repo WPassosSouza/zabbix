@@ -1,0 +1,115 @@
+Fazendo o Upgrade do Zabbix 5 para o 6
+
+https://bestmonitoringtools.com/upgrade-zabbix-to-the-latest-version/?fbclid=IwAR0V2Yp3Y5v8wklJc5u8Z5n5NlS4n4h2k_JSMAxxleHQC8eNiEmw3p40Qhc#Step_1_Stop_Zabbix_Server
+
+ fazer o upgrade de Zabbix para a 5.0 via o uso de pacotes no Ubuntu Server.
+
+➔ Ubuntu Server 20.04
+➔ De Zabbix 4.0/4.4 para 5.0 
+
+Link: 
+
+https://bestmonitoringtools.com/upgrade-zabbix-to-the-latest-version/
+
+parar o serviço do Zabbix:
+
+# systemctl stop zabbix-server
+
+# systemctl stop zabbix-agent
+
+ fazer o backup do banco de dados do
+MySQL/MariaDB:
+
+# mysqldump -h localhost -u'root' -p --single-transaction 'zabbix' | gzip > zabbix_backup.sql.gz
+
+fazer um backup de todos os arquivos do Zabbix:
+
+# mkdir -p /opt/zabbix_backup/bin_files /opt/zabbix_backup/conf_files /opt/zabbix_backup/doc_files
+
+# mkdir -p /opt/zabbix_backup/web_files /opt/zabbix_backup/db_files
+
+# cp -rp /etc/zabbix/zabbix_server.conf /opt/zabbix_backup/conf_files
+# cp -rp /usr/sbin/zabbix_server /opt/zabbix_backup/bin_files
+# cp -rp /usr/share/doc/zabbix-* /opt/zabbix_backup/doc_files
+# cp -rp /etc/httpd/conf.d/zabbix.conf /opt/zabbix_backup/conf_files 2>/dev/null
+# cp -rp /etc/apache2/conf-enabled/zabbix.conf /opt/zabbix_backup/conf_files 2>/dev/null
+# cp -rp /etc/zabbix/php-fpm.conf /opt/zabbix_backup/conf_files 2>/dev/null
+# cp -rp /usr/share/zabbix/ /opt/zabbix_backup/web_files
+
+trocar os repositórios do Zabbix 4.0 existentes e instalar os novos:
+
+Se for versão 18.04 e 20.04:
+
+# dpkg --purge zabbix-release
+
+Instalar novos pacotes para o correto funcionamento do Zabbix 5:
+
+apt-get -y install build-essential libevent-dev libmysqlclient-dev libcurl4-openssl-dev libxml2-dev libopenipmi-dev libssl-dev libsnmp-dev libssh-dev
+
+# wget https://repo.zabbix.com/zabbix/5.0/ubuntu/pool/main/z/zabbix-release/zabbix-release_5.0-1+$(lsb_release -sc)_all.deb
+
+# dpkg -i zabbix-release_5.0-1+$(lsb_release -sc)_all.deb
+
+# apt update
+
+# apt install -y --only-upgrade zabbix-server-mysql zabbix-frontend-php zabbix-agent
+
+instalar o Apache:
+
+apt-get install -y zabbix-apache-conf
+
+# systemctl start mysql
+
+# systemctl enable mysql
+
+# systemctl status mysql
+
+ altera os arquivos no /etc/ para se adequar a nova versão 5.0
+
+# vim /etc/zabbix/web/zabbix.conf.php
+
+# vim /etc/zabbix/zabbix_server.conf
+
+DBHost=localhost
+DBName=zabbixdb
+DBUser=zabbix
+DBPassword=zabbix
+
+# vim /etc/apache2/conf-available/zabbix.conf
+
+- Descomentar a seguinte linha:
+
+- php_value date.timezone Europe/Riga
+
+- Alterar para:
+
+- php_value date.timezone America/Sao_Paulo
+
+restart no sistema:
+
+# systemctl restart apache2
+# systemctl restart zabbix-server
+# systemctl restart zabbix-agent
+# systemctl status zabbix-server
+
+Outros cuidados na hora de uma atualização:
+
+➔ Se for máquina virtual, clonar completamente a máquina de produção antes de executar qualquer procedimento em situações críticas.
+
+➔ ambiente em máquinas reais usar, se possível, redundancias para esses lugares críticos;
+
+➔ usar backups diários e outros mecanismos de redudância como RAID, replicação de banco de dados, etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

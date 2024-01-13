@@ -1,0 +1,12 @@
+Script de Instalação em Sistemas Debian 11
+
+➔ Debian 11
+➔ Zabbix 6.x LTS
+➔ Banco de dados MySQL 8
+➔ Script de instalação
+
+# wget https://raw.githubusercontent.com/Mazuco/Zabbix/master/installdebian11zb6.sh ; bash installdebian11zb6.sh
+
+
+
+
