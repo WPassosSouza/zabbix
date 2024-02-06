@@ -1,0 +1,62 @@
+// Aula 1 - Fazendo Tuning no MySQL
+
+# grep MemTotal /proc/meminfo
+
+# cat /proc/cpuinfo | grep processor
+
+# mysql -u root -p
+
+> show variables like 'innodb_buffer_pool_size';
+
+> show variables like 'innodb_log_file_size';
+
+> show variables like 'innodb_flush_method';
+
+# vim /etc/mysql/mariadb.conf.d/50-server.cnf - MariaDB
+
+# vim /etc/my.cnf - MySQL Oracle
+
+[mysqld] 
+thread_cache_size = 16 ### Valor por padrão : 9 
+key_buffer_size = 8388608 ### Valor por padrão : 8388608 
+max_allowed_packet = 1073741824 ### Valor por padrão : 67108864 
+sort_buffer_size = 262144 ### Valor por padrão : 262144 
+read_rnd_buffer_size = 262144 ### Valor por padrão : 262144 
+bulk_insert_buffer_size = 8M ### Valor por padrão : 8388608 
+myisam_sort_buffer_size = 8388608 ### Valor por padrão : 8388608 
+innodb_buffer_pool_instances = 2 ### Valor por padrão : 1 
+innodb_buffer_pool_size = 3221225472 ### Valor por padrão : 134217728 
+max_heap_table_size = 256M ### Valor por padrão : 16777216 
+tmp_table_size = 256M ### Valor por padrão : 16777216 
+join_buffer_size = 8M ### Valor por padrão : 262144 
+max_connections = 151 ### Valor por padrão : 151 
+table_open_cache = 4096 ### Valor por padrão : 4000 
+table_definition_cache = 2432 ### Valor por padrão : 2000 
+innodb_flush_log_at_trx_commit = 2 ### Valor por padrão : 1 
+innodb_log_file_size = 402653184 ### Valor por padrão : 50331648 
+innodb_write_io_threads = 4 ### Valor por padrão : 4 
+innodb_read_io_threads = 4 ### Valor por padrão : 4 
+innodb_file_per_table = 1 ### Valor por padrão : ON 
+innodb_flush_method = O_DIRECT ### Valor por padrão : fsync 
+innodb_thread_concurrency = 0 ### Valor por padrão : 0 
+innodb_buffer_pool_chunk_size = 134217728 ### Valor por padrão : 134217728
+
+# systemctl restart mysqld
+
+# mysql -u root -p
+
+> show variables like 'innodb_buffer_pool_size';
+
+> show variables like 'innodb_log_file_size';
+
+> show variables like 'innodb_flush_method';
+
+
+
+
+
+
+
+
+
+
